@@ -1,0 +1,1 @@
+/Users/mayo-ya/exercism/rust/run-length-encoding/target/debug/run_length_encoding-ba15706e0d57f511: /Users/mayo-ya/exercism/rust/run-length-encoding/tests/run-length-encoding.rs /Users/mayo-ya/exercism/rust/run-length-encoding/src/lib.rs
