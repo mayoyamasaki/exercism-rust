@@ -1,5 +1,5 @@
 pub struct PascalsTriangle {
-    height: u32,
+    height: u32
 }
 
 impl PascalsTriangle {
@@ -14,8 +14,7 @@ impl PascalsTriangle {
         for i in 0..self.height {
             let mut stage: Vec<u32> = Vec::new();
             for j in 0..i+1 {
-                let v = self.get_value(i as usize, j as usize, &triangle);
-                stage.push(v);
+                stage.push(self.get_value(i as usize, j as usize, &triangle));
             }
             triangle.push(stage);
         }
