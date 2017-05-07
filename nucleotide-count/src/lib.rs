@@ -43,7 +43,7 @@ pub enum DNAError {
 impl fmt::Display for DNAError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            DNAError::IlegalSymbol => write!(f, "Required symbolds is 'A', 'C', 'G', or 'T'")
+            DNAError::IlegalSymbol => write!(f, "Required symbols is 'A', 'C', 'G', or 'T'")
         }
     }
 }
