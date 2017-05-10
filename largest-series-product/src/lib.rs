@@ -1,4 +1,4 @@
-use std::{cmp, fmt};
+use std::fmt;
 use std::error::Error;
 
 pub fn lsp(digits: &str, n: usize) -> Result<u32, LSPError> {
@@ -10,13 +10,7 @@ pub fn lsp(digits: &str, n: usize) -> Result<u32, LSPError> {
         Err(err) => return Err(err),
     };
 
-    let mut max = 0;
-    for window in digits.windows(n) {
-        let v = window.iter().product();
-        max = cmp::max(v, max);
-    }
-
-    Ok(max)
+    Ok(digits.windows(n).map(|w| w.iter().product()).max().unwrap_or(0))
 }
 
 fn str2nums(s: &str) -> Result<Vec<u32>, LSPError> {
