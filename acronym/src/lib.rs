@@ -7,7 +7,7 @@ pub fn abbreviate(msg: &str) -> String {
             if (i == 0 && c.is_alphabetic()) || (c.is_uppercase() && !prev_is_uppercase) {
                 acronym.push(c);
             }
-            is_prev_uppercase = c.is_uppercase();
+            prev_is_uppercase = c.is_uppercase();
         }
     }
     acronym.to_uppercase()
