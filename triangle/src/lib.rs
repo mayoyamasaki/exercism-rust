@@ -1,33 +1,45 @@
-use std::collections::HashSet;
-use std::fmt;
+extern crate num_traits;
+
 use std::error::Error;
+use std::fmt;
+use std::iter::Sum;
+use num_traits::{Num, NumCast};
 
 pub struct Triangle {
-    usides: HashSet<u32>,
+    num_uniq_sides: u32,
 }
 
 impl Triangle {
-    pub fn build(sides: [u32; 3]) -> Result<Triangle, TriangleError> {
-        let maxside = sides.iter().cloned().max().unwrap();
-        let sumside:u32 = sides.iter().sum();
-        if sumside <= 2*maxside {
+    pub fn build<T>(sides: [T; 3]) -> Result<Triangle, TriangleError>
+        where T: Num + NumCast + Copy + Sum + PartialOrd {
+        let maxside: T = sides.iter()
+                              .cloned()
+                              .fold(sides[0], |m, v| if v > m {v} else {m});
+        let sumside:T = sides.iter().cloned().sum();
+        // Triagnle requires a + b > c where a < c and b < c.
+        // In other word, it's (a + b + c - c) > c
+        if (sumside - maxside) <=  maxside {
             return Err(TriangleError::FailedToConstruct);
         }
 
-        let usides: HashSet<u32> = sides.iter().cloned().collect();
-        Ok(Triangle { usides: usides })
+        let mut num_uniq_sides = 3;
+        if sides[0] == sides[1] { num_uniq_sides -= 1; }
+        if sides[1] == sides[2] { num_uniq_sides -= 1; }
+        if sides[2] == sides[0] { num_uniq_sides -= 1; }
+
+        Ok(Triangle { num_uniq_sides: num_uniq_sides })
     }
 
     pub fn is_equilateral(&self) -> bool {
-        self.usides.len() == 1
+        self.num_uniq_sides <= 1
     }
 
     pub fn is_isosceles(&self) -> bool {
-        self.usides.len() == 2
+        self.num_uniq_sides == 2
     }
 
     pub fn is_scalene(&self) -> bool {
-        self.usides.len() == 3
+        self.num_uniq_sides == 3
     }
 }
 
