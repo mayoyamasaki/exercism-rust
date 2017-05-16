@@ -3,7 +3,6 @@ extern crate num_traits;
 use std::cmp::Ordering;
 use std::error::Error;
 use std::fmt;
-use std::iter::Sum;
 use num_traits::{Num, NumCast};
 
 pub struct Triangle<T> {
@@ -11,7 +10,7 @@ pub struct Triangle<T> {
 }
 
 impl<T> Triangle<T>
-    where T: Num + NumCast + Copy + Sum + PartialOrd {
+    where T: Num + NumCast + Copy + PartialOrd {
 
     pub fn build(sides: [T; 3]) -> Result<Triangle<T>, TriangleError> {
         let mut sides: Vec<T> = sides.iter().cloned().collect();
