@@ -1,45 +1,49 @@
 extern crate num_traits;
 
+use std::cmp::Ordering;
 use std::error::Error;
 use std::fmt;
 use std::iter::Sum;
 use num_traits::{Num, NumCast};
 
-pub struct Triangle {
-    num_uniq_sides: u32,
+pub struct Triangle<T> {
+    uniq_sides: Vec<T>,
 }
 
-impl Triangle {
-    pub fn build<T>(sides: [T; 3]) -> Result<Triangle, TriangleError>
-        where T: Num + NumCast + Copy + Sum + PartialOrd {
-        let maxside: T = sides.iter()
-                              .cloned()
-                              .fold(sides[0], |m, v| if v > m {v} else {m});
-        let sumside:T = sides.iter().cloned().sum();
-        // Triagnle requires a + b > c where a < c and b < c.
-        // In other word, it's (a + b + c - c) > c
-        if (sumside - maxside) <=  maxside {
+impl<T> Triangle<T>
+    where T: Num + NumCast + Copy + Sum + PartialOrd {
+
+    pub fn build(sides: [T; 3]) -> Result<Triangle<T>, TriangleError> {
+        let mut sides: Vec<T> = sides.iter().cloned().collect();
+        sides.sort_by(|a, b| if a < b { Ordering::Less } else { Ordering::Greater });
+
+        if sides[0] + sides[1] <= sides[2] {
             return Err(TriangleError::FailedToConstruct);
         }
 
-        let mut num_uniq_sides = 3;
-        if sides[0] == sides[1] { num_uniq_sides -= 1; }
-        if sides[1] == sides[2] { num_uniq_sides -= 1; }
-        if sides[2] == sides[0] { num_uniq_sides -= 1; }
+        let mut uniq_sides: Vec<T> = Vec::new();
+        for side in sides.into_iter() {
+            if let Some(last_side) = uniq_sides.last() {
+                if *last_side == side {
+                    continue;
+                }
+            }
+            uniq_sides.push(side);
+        }
 
-        Ok(Triangle { num_uniq_sides: num_uniq_sides })
+        Ok(Triangle { uniq_sides: uniq_sides })
     }
 
     pub fn is_equilateral(&self) -> bool {
-        self.num_uniq_sides <= 1
+        self.uniq_sides.len() == 1
     }
 
     pub fn is_isosceles(&self) -> bool {
-        self.num_uniq_sides == 2
+        self.uniq_sides.len() == 2
     }
 
     pub fn is_scalene(&self) -> bool {
-        self.num_uniq_sides == 3
+        self.uniq_sides.len() == 3
     }
 }
 
