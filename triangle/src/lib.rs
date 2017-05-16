@@ -14,7 +14,7 @@ impl<T> Triangle<T>
 
     pub fn build(sides: [T; 3]) -> Result<Triangle<T>, TriangleError> {
         let mut sides: Vec<T> = sides.iter().cloned().collect();
-        sides.sort_by(|a, b| if a < b { Ordering::Less } else { Ordering::Greater });
+        sides.sort_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Greater) );
 
         if sides[0] + sides[1] <= sides[2] {
             return Err(TriangleError::FailedToConstruct);
