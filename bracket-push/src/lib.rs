@@ -24,11 +24,7 @@ impl Brackets {
                     ']' => '[',
                     _ => continue
                 };
-                if let Some(real) = q.pop() {
-                    if real != expect {
-                        return false;
-                    }
-                } else {
+                if q.pop() != Some(expect) {
                     return false;
                 }
             }
