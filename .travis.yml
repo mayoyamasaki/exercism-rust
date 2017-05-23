@@ -1,0 +1,2 @@
+language: rust
+script: b=`pwd`; for d in $(find . -type d -not -name '.*'  -maxdepth 1); do cd "${b%/}/$d" && cargo test -- --ignored; done
